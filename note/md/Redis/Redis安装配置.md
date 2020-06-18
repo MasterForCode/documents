@@ -1,7 +1,11 @@
 1. 安装gcc和ruby
 
     ```bash
-    [root@localhost ~]# yum install gcc ruby
+    [root@localhost ~]# yum -y install centos-release-scl
+    [root@localhost ~]# yum -y install devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-binutils
+    [root@localhost ~]# scl enable devtoolset-9 bash
+    [root@localhost ~]# echo "source /opt/rh/devtoolset-9/enable" >> /etc/profile
+    [root@localhost ~]# gcc -v
     ```
 
 2. 到[官网](http://download.redis.io/releases/)下载最新版本
@@ -9,8 +13,8 @@
 3. 将文件解压并复制到创建的目录中
 
     ```bash
-    [root@localhost ~]# tar -zxvf redis-5.0.5.tar.gz 
-    [root@localhost ~]# mv redis-5.0.5 /usr/local/redis
+    [root@localhost ~]# tar -zxvf redis-6.0.5.tar.gz 
+    [root@localhost ~]# mv redis-6.0.5 /usr/local/redis
     ```
 
 4. 编译安装
@@ -56,6 +60,10 @@
         logfile "/usr/local/redis/logs/redis.log" 
         # pidfile文件对应7000，7001，7002
         pidfile /var/run/redis_7000.pid  
+        # 禁用危险命令
+        rename-command FLUSHALL ""
+        rename-command FLUSHDB ""
+        rename-command KEYS ""
         ```
 
     * 7001端口的配置
@@ -85,6 +93,10 @@
         logfile "/usr/local/redis/logs/redis.log" 
         # pidfile文件对应7000，7001，7002
         pidfile /var/run/redis_7001.pid  
+        # 禁用危险命令
+        rename-command FLUSHALL ""
+        rename-command FLUSHDB ""
+        rename-command KEYS ""
         ```
 
     * 7002端口的配置
@@ -113,7 +125,11 @@
         # redis服务日志
         logfile "/usr/local/redis/logs/redis.log" 
         # pidfile文件对应7000，7001，7002
-        pidfile /var/run/redis_7002.pid  
+        pidfile /var/run/redis_7002.pid 
+        # 禁用危险命令
+        rename-command FLUSHALL ""
+        rename-command FLUSHDB ""
+        rename-command KEYS "" 
         ```
 
 7. 创建启动和关闭脚本

@@ -5,16 +5,19 @@
 3. * 上传到CentOS中
    
    * 创建文件夹
+
    ```bash
     [root@localhost ~]# mkdir /usr/local/nexus
    ``` 
    
    * 解压
+
    ```bash
     [root@localhost ~]# tar -zxvf nexus-3.14.0-04-unix.tar.gz -C /usr/local/nexus/
    ``` 
    
    * 进入nexus的bin目录下指定jdk路径
+   
    ```bash
     [root@localhost ~]# cd /usr/local/nexus/nexus-3.14.0-04/bin/
     [root@localhost bin]# vi nexus
