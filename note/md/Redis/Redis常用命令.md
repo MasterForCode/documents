@@ -34,6 +34,10 @@
 8. OBJECT ENCODING $key
 
    > 查看键对应的内部编码
+   
+9. SELECT $index
+
+   > 选择数据库
 
 # String相关命令
 
@@ -52,6 +56,7 @@
    > * 该操作是原子性的
       * MSET中的某个键存在于当前DB中的话，会用新的值替换掉旧的值，过期时间也会被清除（如果存在的话）
       * 如果想要在键不存在的情况下，批量写入，请使用MSETNX 命令
+      * MSETNX是原子操作，要么都成功要么都失败
 
 4. MGET $key [$key …]
 
@@ -63,17 +68,50 @@
 
    > * 当键对应的值为正数时,执行成功
       * 自增或者增加指定数/自减或者减去指定数
+   
+6. APPEND $key $value
+
+   > * 在key对应的值上添加字符串value
+   > * 如果key不存在，新增
+
+7. STRLEN  $key
+
+   > 获取key对应值的长度
+
+8. GETRANGE $key $start $end
+
+   > * 截取key对应的值，闭区间
+   > * end为-1表示截取从start开始的所有字符
+
+9. SETRANGE $key $offset $value
+
+   > * 从offset处开始将等长字符替换成value
+
+10. SETEX $key $seconds $value
+
+    > * 设置并给定过期时间
+
+11. SETNX $key $value
+
+    > * 库中不存在key时创建
+    > * 库中存在则创建失败
+
+12. GETSET $key $value
+
+    > * 返回修改前的值，并修改值
 
 # HASH相关命令
 
 1. HSET $key $field $value [$key $value...]
 
    > 写入值
+     
       * 当新增一个field时，返回结果为1，当更新了一个已经存在的field时，返回0
 
-2. HGET $key $value
+2. HGET $key $field
 
    > 获取key下的field对应的值
+     
       * field存在，返回对应的值，反之返回nil
 
 3. HMSET $key $field $value [$field $value …]
@@ -116,16 +154,46 @@
 4. LRANGE $key $start $end
 
    > 获取指定范围内的元素
+     
       * $start、$end：0表示列表的第一个元素、1表示第2个元素，-1表示列表的最后一个元素，-2表示倒数第二个元素等等
+   
 5. LTRIM $key $start $end
 
    > 清空列表
+     
       * 严格满足 $start、$end >0 && $start >$end
 
 6. BLPOP/BRPOP $key [$key...]  $timeout
 
    > 阻塞式的删除列表元素
+     
       * 如果超时，则返回nil
+   
+7. LINDEX $key $index
+
+   > * 通过下标获取值
+
+8. LLEN $key
+
+   > * 获取列表长度
+
+9. LREM $key $count $value
+
+   > * 移除列表中指定数量的value
+
+10. RPOPLPUSH $key $key1
+
+    > * 将key列表中的最后一个元素放到key1列表的头部
+    > * key1列表不存在就创建
+
+11. LSET $key1 $index $value
+
+    > * 将列表中指定下标的值替换成新值
+    > * 如果key1不存在，报错
+
+12. LINSRT $key before|after $value $value1
+
+    > * 在指定值的前|后插入value1
 
 # SET相关命令
 
@@ -148,7 +216,20 @@
 5. SPOP $key [$count]
 
    > 删除集合中的元素
+     
       * 随机删除
+   
+6. SREM $key $value
+
+   > * 删除元素
+
+7. SRANDMEMBER $key $count
+
+   > * 随机获取指定个数的元素
+
+8. SDIFF $key1 $key2 |SINTER $key1 key2 | SUNION $key1 $key2
+
+   > 差集|交集|并集
 
 # SORTEDSET相关命令
 
@@ -165,7 +246,7 @@
 3. ZSCORE $key $member
 
    > 获取某个成员的分数
-      
+   
 4. ZRANK/ZREVRANK $key $member
 
    > 计算某个成员的排名,分数从低到高排名/分数从高到低排名
@@ -181,7 +262,11 @@
 7. ZREMRANGEBYSCORE $key $min $max
 
    > 删除指定分数范围内的元素
-      
+   
+
+# GEOSPATIAL 相关命令
+
+1. 
 
 # Config 相关命令
 
@@ -190,8 +275,9 @@
    * CONFIG GETslowlog-max-len 定义慢查询列表的大小
 
 2. 连接空闲超时
-   * CONFIG GET timeout 600
-
+   
+* CONFIG GET timeout 600
+   
 3. 最大连接数
    * CONFIG GET maxclients 100
 
